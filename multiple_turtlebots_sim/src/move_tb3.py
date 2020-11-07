@@ -8,7 +8,8 @@ from enum import Enum
 turtlebot_dict = {
 	"turtlebot1" : "tb3_0/cmd_vel",
 	"turtlebot2" : "tb3_1/cmd_vel",
-	"turtlebot3" : "tb3_2/cmd_vel"	
+	"turtlebot3" : "tb3_2/cmd_vel",
+	"turtlebot4" : "tb3_3/cmd_vel"
 }
 
 # Input: str, str, double
