@@ -9,6 +9,13 @@ from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 #from sensor_msgs.msg import BatteryState
 
+tutlebot_dict = {
+    "turtlebot1" : "tb3_0/",
+    "turtlebot2" : "tb3_1/",
+    "turtlebot3" : "tb3_2/",
+    "turtlebot4" : "tb3_3/"
+}
+
 partially_failed_laser = False
 partially_failed_imu = False
 partially_failed_odom = False
@@ -78,27 +85,33 @@ def Odom_callback(msg):
     if (imu_xorientation != msg.pose.pose.orientation.x) or (imu_yorientation != msg.pose.pose.orientation.y) or (imu_zorientation != msg.pose.pose.orientation.z) or (imu_worientation != msg.pose.pose.orientation.w):
         partially_failed_odom = True
 
-# initialize turtlebot3 node
-rospy.init_node('remove_turtlebot')
+def err_tb(tb3_name):
 
-# subscribe to laserscan, imu, and odom
-LaserScan_sub = rospy.Subscriber('laser_err_inj', LaserScan, LaserScan_callback)
-Imu_sub = rospy.Subscriber('imu_err_inj', Imu, Imu_callback)
-Odom_sub = rospy.Subscriber('odom_err_inj', Odometry, Odom_callback)
+    # initialize turtlebot3 node
+    rospy.init_node('remove_turtlebot')
 
-rospy.spin()
+    # subscribe to laserscan, imu, and odom
+    LaserScan_sub = rospy.Subscriber(tb3_name + '/laser_err_inj', LaserScan, LaserScan_callback)
+    Imu_sub = rospy.Subscriber(tb3_name + '/imu_err_inj', Imu, Imu_callback)
+    Odom_sub = rospy.Subscriber(tb3_name + '/odom_err_inj', Odometry, Odom_callback)
 
-print(partially_failed_laser)
+    rospy.spin()
 
-if partially_failed_laser:
-    rospy.signal_shutdown("Fault detected in LaserScan")
+    print(partially_failed_laser)
 
-if partially_failed_imu:
-    rospy.signal_shutdown("Fault detected in Imu")
+    if partially_failed_laser:
+        rospy.signal_shutdown("Fault detected in LaserScan")
+
+    if partially_failed_imu:
+        rospy.signal_shutdown("Fault detected in Imu")
  
-if partially_failed_odom:
-    rospy.signal_shutdown("Fault detected in Odom")
+    if partially_failed_odom:
+        rospy.signal_shutdown("Fault detected in Odom")
 
 
-
+if __name__ == '__main__':
+    tb3_0 = err_tb("turtlebot1")
+    tb3_1 = err_tb("turtlebot2")
+    tb3_2 = err_tb("turtlebot3")
+    tb3_3 = err_tb("turtlebot4")
 

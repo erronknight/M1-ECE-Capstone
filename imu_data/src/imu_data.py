@@ -3,6 +3,13 @@
 import rospy
 from sensor_msgs.msg import Imu
 
+turtlebot_dict = {
+    "turtlebot1" : "tb3_0",
+    "turtlebot2" : "tb3_1",
+    "turtlebot3" : "tb3_2",
+    "turtlebot4" : "tb3_3"
+}
+
 inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
@@ -26,9 +33,6 @@ actual_xlinearacceleration = 0.0
 actual_ylinearacceleration = 0.0
 actual_zlinearacceleration = 0.0
 actual_linearaccelerationcovariance = [0.0] * 9
-
-#Create error-injected topic
-rospy.init_node('imu_err_inj')
 
 #Get real sensor values
 def listener(msg):
@@ -79,71 +83,80 @@ def listener(msg):
         actual_linearaccelerationcovariance[k] = msg.linear_acceleration_covariance[k]
 
 #########################################
-#Create new message
-imu_msg = Imu() 
+def imu_err_inj(tb3_name):
+    #Create error-injected topic
+    rospy.init_node('imu_err_inj')
 
-#Fill message with values
-imu_msg.header.seq = 0
-imu_msg.header.stamp.secs = 0
-imu_msg.header.stamp.nsecs = 0
-imu_msg.header.frame_id = ""
+    #Create new message
+    imu_msg = Imu() 
 
-imu_msg.orientation.x = 0.0
-imu_msg.orientation.y = 0.0
-imu_msg.orientation.z = 0.0
-imu_msg.orientation.w = 0.0
-imu_msg.orientation_covariance = [0.0] * 9
+    #Fill message with values
+    imu_msg.header.seq = 0
+    imu_msg.header.stamp.secs = 0
+    imu_msg.header.stamp.nsecs = 0
+    imu_msg.header.frame_id = ""
 
-imu_msg.angular_velocity.x = 0.0
-imu_msg.angular_velocity.y = 0.0
-imu_msg.angular_velocity.z = 0.0
-imu_msg.angular_velocity_covariance = [0.0] * 9
+    imu_msg.orientation.x = 0.0
+    imu_msg.orientation.y = 0.0
+    imu_msg.orientation.z = 0.0
+    imu_msg.orientation.w = 0.0
+    imu_msg.orientation_covariance = [0.0] * 9
 
-imu_msg.linear_acceleration.x = 0.0
-imu_msg.linear_acceleration.y = 0.0
-imu_msg.linear_acceleration.z = 0.0
-imu_msg.linear_acceleration_covariance = [0.0] * 9
+    imu_msg.angular_velocity.x = 0.0
+    imu_msg.angular_velocity.y = 0.0
+    imu_msg.angular_velocity.z = 0.0
+    imu_msg.angular_velocity_covariance = [0.0] * 9
 
-#########################################
+    imu_msg.linear_acceleration.x = 0.0
+    imu_msg.linear_acceleration.y = 0.0
+    imu_msg.linear_acceleration.z = 0.0
+    imu_msg.linear_acceleration_covariance = [0.0] * 9
 
-rate = rospy.Rate(1)
-
-#Publish message into new topic
-while not rospy.is_shutdown(): 
-    my_pub = rospy.Publisher('/imu_err_inj', Imu, queue_size = 10) 
-    my_sub = rospy.Subscriber('imu', Imu, listener)
 
     #########################################
-    #INJECT ERRORS HERE
-    imu_msg.header.seq = actual_seq
-    imu_msg.header.stamp.secs = actual_secs
-    imu_msg.header.stamp.nsecs = actual_nsecs
-    imu_msg.header.frame_id = actual_frameid
+    rate = rospy.Rate(1)
 
-    imu_msg.orientation.x = actual_xorientation * 0.0
-    imu_msg.orientation.y = actual_yorientation * 0.0
-    imu_msg.orientation.z = actual_zorientation * 0.0
-    imu_msg.orientation.w = actual_worientation * 0.0
-    for i in range(len(actual_orientationcovariance)):
-        imu_msg.orientation_covariance[i] = actual_orientationcovariance[i] * 0.0
+    #Publish message into new topic
+    while not rospy.is_shutdown(): 
+        my_pub = rospy.Publisher(tb3_name + '/imu_err_inj', Imu, queue_size = 10) 
+        my_sub = rospy.Subscriber(tb3_name + '/imu', Imu, listener)
 
-    imu_msg.angular_velocity.x = actual_xangularvelocity * 0.0
-    imu_msg.angular_velocity.y = actual_yangularvelocity * 0.0
-    imu_msg.angular_velocity.z = actual_xangularvelocity * 0.0
-    for j in range(len(actual_angularvelocitycovariance)):
-        imu_msg.angular_velocity_covariance[j] = actual_angularvelocitycovariance[j] * 0.0
+        #########################################
+        #INJECT ERRORS HERE
+        imu_msg.header.seq = actual_seq
+        imu_msg.header.stamp.secs = actual_secs
+        imu_msg.header.stamp.nsecs = actual_nsecs
+        imu_msg.header.frame_id = actual_frameid
 
-    imu_msg.linear_acceleration.x = actual_xlinearacceleration * 0.0
-    imu_msg.linear_acceleration.y = actual_ylinearacceleration * 0.0
-    imu_msg.linear_acceleration.z = actual_zlinearacceleration * 0.0
-    for k in range(len(actual_linearaccelerationcovariance)):
-        imu_msg.linear_acceleration_covariance[k] = actual_linearaccelerationcovariance[k] * 0.0
+        imu_msg.orientation.x = actual_xorientation * 0.0
+        imu_msg.orientation.y = actual_yorientation * 0.0
+        imu_msg.orientation.z = actual_zorientation * 0.0
+        imu_msg.orientation.w = actual_worientation * 0.0
+        for i in range(len(actual_orientationcovariance)):
+            imu_msg.orientation_covariance[i] = actual_orientationcovariance[i] * 0.0
 
-    #########################################
+        imu_msg.angular_velocity.x = actual_xangularvelocity * 0.0
+        imu_msg.angular_velocity.y = actual_yangularvelocity * 0.0
+        imu_msg.angular_velocity.z = actual_xangularvelocity * 0.0
+        for j in range(len(actual_angularvelocitycovariance)):
+            imu_msg.angular_velocity_covariance[j] = actual_angularvelocitycovariance[j] * 0.0
+
+        imu_msg.linear_acceleration.x = actual_xlinearacceleration * 0.0
+        imu_msg.linear_acceleration.y = actual_ylinearacceleration * 0.0
+        imu_msg.linear_acceleration.z = actual_zlinearacceleration * 0.0
+        for k in range(len(actual_linearaccelerationcovariance)):
+            imu_msg.linear_acceleration_covariance[k] = actual_linearaccelerationcovariance[k] * 0.0
+
+        #########################################
+            
+        my_pub.publish(imu_msg)
+        rate.sleep()
         
-    my_pub.publish(imu_msg)
-    rate.sleep()
-    
-rospy.spin()
-    
+    rospy.spin()
+        
+if __name__ == '__main__':
+    tb3_0 = imu_err_inj("turtlebot1")
+    tb3_1 = imu_err_inj("turtlebot2")
+    tb3_2 = imu_err_inj("turtlebot3")
+    tb3_3 = imu_err_inj("turtlebot4")
 

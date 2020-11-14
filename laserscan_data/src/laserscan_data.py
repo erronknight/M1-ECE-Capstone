@@ -3,6 +3,13 @@
 import rospy
 from sensor_msgs.msg import LaserScan
 
+turtlebot_dict = {
+    "turtlebot1" : "tb3_0/",
+    "turtlebot2" : "tb3_1/",
+    "turtlebot3" : "tb3_2/",
+    "turtlebot4" : "tb3_3/"	
+}
+
 inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
@@ -20,9 +27,6 @@ actual_rangemin = 0.0
 actual_rangemax = 0.0
 actual_ranges = [0.0] * 360
 actual_intensities = [0.0] * 360
-
-#Create error-injected topic
-rospy.init_node('laser_err_inj')
 
 #Get real sensor values
 def listener(msg):
@@ -60,61 +64,72 @@ def listener(msg):
     for j in range(len(msg.intensities)):
         actual_intensities = msg.intensities
 
-#########################################
-#Create new message
-laserscan_msg = LaserScan() 
-
-#Fill message with values
-laserscan_msg.header.seq = 0 
-laserscan_msg.header.stamp.secs = 0
-laserscan_msg.header.stamp.nsecs = 0
-laserscan_msg.header.frame_id = ""
-
-laserscan_msg.angle_min = 0.0
-laserscan_msg.angle_max = 0.0
-laserscan_msg.angle_increment = 0.0
-laserscan_msg.time_increment = 0.0
-laserscan_msg.scan_time = 0.0
-laserscan_msg.range_min = 0.0
-laserscan_msg.range_max = 0.0
-
-laserscan_msg.ranges = [0.0] * 360
-laserscan_msg.intensities = [0.0] * 360
-
-#########################################
-
-rate = rospy.Rate(1)
-
-#Publish message into new topic
-while not rospy.is_shutdown(): 
-    my_pub = rospy.Publisher('/laser_err_inj', LaserScan, queue_size = 10) 
-    my_sub = rospy.Subscriber('scan', LaserScan, listener)
+def laserscan_err_inj(tb3_name):
+    #Create error-injected topic
+    rospy.init_node('laser_err_inj')
 
     #########################################
-    #INJECT ERRORS HERE
-    laserscan_msg.header.seq = actual_seq 
-    laserscan_msg.header.stamp.secs = actual_secs
-    laserscan_msg.header.stamp.nsecs = actual_nsecs
-    laserscan_msg.header.frame_id = actual_frameid
+    #Create new message
+    laserscan_msg = LaserScan() 
 
-    laserscan_msg.angle_min = actual_anglemin
-    laserscan_msg.angle_max = actual_anglemax
-    laserscan_msg.angle_increment = actual_angleincrement
-    laserscan_msg.time_increment = actual_timeincrement
-    laserscan_msg.scan_time = actual_scantime
-    laserscan_msg.range_min = actual_rangemin
-    laserscan_msg.range_max = actual_rangemax
+    #Fill message with values
+    laserscan_msg.header.seq = 0 
+    laserscan_msg.header.stamp.secs = 0
+    laserscan_msg.header.stamp.nsecs = 0
+    laserscan_msg.header.frame_id = ""
 
-    for i in range(len(actual_ranges)):
-        laserscan_msg.ranges[i] = actual_ranges[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+    laserscan_msg.angle_min = 0.0
+    laserscan_msg.angle_max = 0.0
+    laserscan_msg.angle_increment = 0.0
+    laserscan_msg.time_increment = 0.0
+    laserscan_msg.scan_time = 0.0
+    laserscan_msg.range_min = 0.0
+    laserscan_msg.range_max = 0.0
 
-    for j in range(len(actual_intensities)):
-        laserscan_msg.intensities[i] = actual_intensities[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+    laserscan_msg.ranges = [0.0] * 360
+    laserscan_msg.intensities = [0.0] * 360
+
     #########################################
-        
-    my_pub.publish(laserscan_msg)
-    rate.sleep()
+
+    rate = rospy.Rate(1)
+
+    #Publish message into new topic
+    while not rospy.is_shutdown(): 
+        my_pub = rospy.Publisher(tb3_name+'laser_err_inj', LaserScan, queue_size = 10) 
+        my_sub = rospy.Subscriber(tb3_name+'scan', LaserScan, listener)
+
+        #########################################
+        #INJECT ERRORS HERE
+        laserscan_msg.header.seq = actual_seq 
+        laserscan_msg.header.stamp.secs = actual_secs
+        laserscan_msg.header.stamp.nsecs = actual_nsecs
+        laserscan_msg.header.frame_id = actual_frameid
+
+        laserscan_msg.angle_min = actual_anglemin
+        laserscan_msg.angle_max = actual_anglemax
+        laserscan_msg.angle_increment = actual_angleincrement
+        laserscan_msg.time_increment = actual_timeincrement
+        laserscan_msg.scan_time = actual_scantime
+        laserscan_msg.range_min = actual_rangemin
+        laserscan_msg.range_max = actual_rangemax
+
+        for i in range(len(actual_ranges)):
+            laserscan_msg.ranges[i] = actual_ranges[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+
+        for j in range(len(actual_intensities)):
+            laserscan_msg.intensities[i] = actual_intensities[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+        #########################################
+            
+        my_pub.publish(laserscan_msg)
+        rate.sleep()
     
-rospy.spin()
-    
+    rospy.spin()
+
+if __name__ == '__main__':
+    tb3_0 = laserscan_err_inj("turtlebot1")
+    tb3_1 = laserscan_err_inj("turtlebot2")
+    tb3_2 = laserscan_err_inj("turtlebot3")
+    tb3_3 = laserscan_err_inj("turtlebot4")
+
+ 
 
