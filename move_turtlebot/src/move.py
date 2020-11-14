@@ -89,11 +89,17 @@ def err_tb(tb3_name):
 
     # initialize turtlebot3 node
     rospy.init_node('remove_turtlebot')
-
-    # subscribe to laserscan, imu, and odom
-    LaserScan_sub = rospy.Subscriber(tb3_name + '/laser_err_inj', LaserScan, LaserScan_callback)
-    Imu_sub = rospy.Subscriber(tb3_name + '/imu_err_inj', Imu, Imu_callback)
-    Odom_sub = rospy.Subscriber(tb3_name + '/odom_err_inj', Odometry, Odom_callback)
+    
+    if tb3_name == "turtlebot1":
+        # subscribe to laserscan, imu, and odom
+        LaserScan_sub = rospy.Subscriber(tb3_name + '/laser_err_inj', LaserScan, LaserScan_callback)
+        Imu_sub = rospy.Subscriber(tb3_name + '/imu_err_inj', Imu, Imu_callback)
+        Odom_sub = rospy.Subscriber(tb3_name + '/odom_err_inj', Odometry, Odom_callback)
+    else:
+        # subscribe to laserscan, imu, and odom
+        LaserScan_sub = rospy.Subscriber('/scan', LaserScan, LaserScan_callback)
+        Imu_sub = rospy.Subscriber('/imu', Imu, Imu_callback)
+        Odom_sub = rospy.Subscriber('/odom', Odometry, Odom_callback)
 
     rospy.spin()
 
