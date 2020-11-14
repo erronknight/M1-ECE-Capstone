@@ -165,7 +165,7 @@ def odom_err_inj(tb3_name):
     rospy.spin()
 if __name__ == '__main__':
     tb3_0 = odom_err_inj("turtlebot1")
-    tb3_1 = odom_err_inj("turtlebot2")
-    tb3_2 = odom_err_inj("turtlebot3")
-    tb3_3 = odom_err_inj("turtlebot4")
+    #tb3_1 = odom_err_inj("turtlebot2")
+    #tb3_2 = odom_err_inj("turtlebot3")
+    #tb3_3 = odom_err_inj("turtlebot4")
 

@@ -127,9 +127,9 @@ def laserscan_err_inj(tb3_name):
 
 if __name__ == '__main__':
     tb3_0 = laserscan_err_inj("turtlebot1")
-    tb3_1 = laserscan_err_inj("turtlebot2")
-    tb3_2 = laserscan_err_inj("turtlebot3")
-    tb3_3 = laserscan_err_inj("turtlebot4")
+    #tb3_1 = laserscan_err_inj("turtlebot2")
+    #tb3_2 = laserscan_err_inj("turtlebot3")
+    #tb3_3 = laserscan_err_inj("turtlebot4")
 
  
 
