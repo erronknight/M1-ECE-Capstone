@@ -7,18 +7,19 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
+
 #from sensor_msgs.msg import BatteryState
 
-tutlebot_dict = {
+turtlebot_dict = {
     "turtlebot1" : "tb3_0/",
     "turtlebot2" : "tb3_1/",
     "turtlebot3" : "tb3_2/",
     "turtlebot4" : "tb3_3/"
 }
 
-partially_failed_laser = False
-partially_failed_imu = False
-partially_failed_odom = False
+#partially_failed_laser = False
+#partially_failed_imu = False
+#partially_failed_odom = False
 
 imu_xorientation = 0.0
 imu_yorientation = 0.0
@@ -35,6 +36,8 @@ def LaserScan_callback(msg):
     for i in range(len(msg.ranges)):
         if (msg.ranges[i] <= low_range) or (msg.ranges[i] >= high_range):
             partially_failed_laser = True
+
+    #print("LaserScan fault: " + str(partially_failed_laser))
 
 def Imu_callback(msg):
 
@@ -59,6 +62,8 @@ def Imu_callback(msg):
 
     if ((msg.linear_acceleration.x or msg.linear_acceleration.y or msg.linear_acceleration.z) <= low_linear_acc) or ((msg.linear_acceleration.x or msg.linear_acceleration.y or msg.linear_acceleration.z) >= high_linear_acc):
         partially_failed_imu = True
+
+    #print("HELLO" + str(partially_failed_imu))
 
 def Odom_callback(msg):
     
@@ -85,39 +90,66 @@ def Odom_callback(msg):
     if (imu_xorientation != msg.pose.pose.orientation.x) or (imu_yorientation != msg.pose.pose.orientation.y) or (imu_zorientation != msg.pose.pose.orientation.z) or (imu_worientation != msg.pose.pose.orientation.w):
         partially_failed_odom = True
 
+    #print("Odom fault: " + str(partially_failed_odom))
+
 def err_tb(tb3_name):
+    
+    global partially_failed_laser
+    global partially_failed_imu
+    global partially_failed_odom
+
+    partially_failed_laser = False
+    partially_failed_imu = False
+    partially_failed_odom = False
 
     # initialize turtlebot3 node
     rospy.init_node('remove_turtlebot')
+    r = rospy.Rate(10)
     
-    if tb3_name == "turtlebot1":
-        # subscribe to laserscan, imu, and odom
-        LaserScan_sub = rospy.Subscriber(tb3_name + '/laser_err_inj', LaserScan, LaserScan_callback)
-        Imu_sub = rospy.Subscriber(tb3_name + '/imu_err_inj', Imu, Imu_callback)
-        Odom_sub = rospy.Subscriber(tb3_name + '/odom_err_inj', Odometry, Odom_callback)
-    else:
-        # subscribe to laserscan, imu, and odom
-        LaserScan_sub = rospy.Subscriber('/scan', LaserScan, LaserScan_callback)
-        Imu_sub = rospy.Subscriber('/imu', Imu, Imu_callback)
-        Odom_sub = rospy.Subscriber('/odom', Odometry, Odom_callback)
+    while True:
+        print(tb3_name)
+        if tb3_name == "turtlebot1":
+            # subscribe to laserscan, imu, and odom
+            LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, LaserScan_callback)
+            print("LaserScan fault: " + str(partially_failed_laser))
+            if partially_failed_laser:
+                break
+            Imu_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'imu_err_inj', Imu, Imu_callback)
+            print("Imu fault: " + str(partially_failed_imu))
+            if partially_failed_imu:
+                break
+            Odom_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'odom_err_inj', Odometry, Odom_callback)
+            print("Odom fault: " + str(partially_failed_odom))
+            if partially_failed_odom:
+                break
+            r.sleep()
+        else:
+            # subscribe to laserscan, imu, and odom
+            LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'scan', LaserScan, LaserScan_callback)
+            print("LaserScan fault: " + str(partially_failed_laser))
+            if partially_failed_laser:
+                break
+            Imu_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'imu', Imu, Imu_callback)
+            print("Imu fault: " + str(partially_failed_imu))
+            if partially_failed_imu:
+                break
+            Odom_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'odom', Odometry, Odom_callback)
+            print("Odom fault: " + str(partially_failed_odom))
+            if partially_failed_odom:
+                break
+        
+            #rospy.signal_shutdown("Fault detected in Laser")        
+            #rospy.signal_shutdown("Fault detected in Imu")      
+            #rospy.signal_shutdown("Fault detected in Odom")
+            r.sleep()
 
-    rospy.spin()
 
-    print(partially_failed_laser)
+partially_failed_laser = False
+partially_failed_imu = False
+partially_failed_odom = False
 
-    if partially_failed_laser:
-        rospy.signal_shutdown("Fault detected in LaserScan")
-
-    if partially_failed_imu:
-        rospy.signal_shutdown("Fault detected in Imu")
- 
-    if partially_failed_odom:
-        rospy.signal_shutdown("Fault detected in Odom")
-
-
-if __name__ == '__main__':
+while True:
     tb3_0 = err_tb("turtlebot1")
     tb3_1 = err_tb("turtlebot2")
     tb3_2 = err_tb("turtlebot3")
     tb3_3 = err_tb("turtlebot4")
-
