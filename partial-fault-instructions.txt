@@ -16,9 +16,10 @@ NOTE: turtlebot1 is the one that has an error, according to move.py (the partial
 
 3. RUN ERROR INJECTORS
 	rosrun imu_data imu_data.py
-	rosrun batterystate_data batterystate_data.py
+	rosrun batterystate_data batterystate_data.py (NOTE: Don't run if running in simulation)
 	rosrun laserscan_data laserscan_data.py
 	rosrun odom_data odom_data.py
+  Now, if run rostopic list, all 4 error injectors should show up for the faulty robot
 
 5. IF WANT TO SWITCH WHICH ROBOT IS FAULTY: SET UP PARTIAL FAULT ALGORITHM (move_turtlebot/src/move.py)
 	If you want to switch which robot is faulty, change line 93 to say the name of the turtlebot that is faulty. 
@@ -26,3 +27,9 @@ NOTE: turtlebot1 is the one that has an error, according to move.py (the partial
 
 6. RUN PARTIAL FAULT ALGORITHM
 	rosrun move_turtlebot move.py
+    
+   The algorithm checks each robot for a fault iteratively, starting with turtlebot1. 
+   For each robot, it checks each sensor for a fault and prints the result to the screen as a boolean (if there's a fault, will print True).
+   Once a fault is detected (prints True for a sensor), the algorithm moves on to the next robot. If no faults are detected (all sensors print False), it'll move on after it checks each sensor.
+   When each robot has been checked, it loops back to the first robot (turtlebot1) and runs until the user tells it to stop (CTRL-C)
+
