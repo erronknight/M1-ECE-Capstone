@@ -2,6 +2,7 @@
 
 import rospy
 from sensor_msgs.msg import Imu
+from enum import Enum
 
 turtlebot_dict = {
     "turtlebot1" : "tb3_0",
@@ -118,8 +119,8 @@ def imu_err_inj(tb3_name):
 
     #Publish message into new topic
     while not rospy.is_shutdown(): 
-        my_pub = rospy.Publisher(tb3_name + '/imu_err_inj', Imu, queue_size = 10) 
-        my_sub = rospy.Subscriber(tb3_name + '/imu', Imu, listener)
+        my_pub = rospy.Publisher(turtlebot_dict[tb3_name] + '/imu_err_inj', Imu, queue_size = 10) 
+        my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + '/imu', Imu, listener)
 
         #########################################
         #INJECT ERRORS HERE
