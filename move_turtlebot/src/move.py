@@ -7,9 +7,9 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
+#from sensor_msgs.msg import BatteryState #Not needed for simulation
 
-#from sensor_msgs.msg import BatteryState
-
+#Dictionary of turtlebots in swarm
 turtlebot_dict = {
     "turtlebot1" : "tb3_0/",
     "turtlebot2" : "tb3_1/",
@@ -33,11 +33,10 @@ def LaserScan_callback(msg):
     low_range = 0.0
     high_range = 0.0
 
+    #Check for laser scanner faults
     for i in range(len(msg.ranges)):
         if (msg.ranges[i] <= low_range) or (msg.ranges[i] >= high_range):
             partially_failed_laser = True
-
-    #print("LaserScan fault: " + str(partially_failed_laser))
 
 def Imu_callback(msg):
 
@@ -57,13 +56,13 @@ def Imu_callback(msg):
     low_linear_acc = 0.0
     high_linear_acc = 0.0
 
+
+    #Check for IMU faults
     if ((msg.angular_velocity.x or msg.angular_velocity.y or msg.angular_velocity.z) <= low_angular_vel) or ((msg.angular_velocity.x or msg.angular_velocity.y or msg.angular_velocity.z) <= high_angular_vel):
         partially_failed_imu = True
 
     if ((msg.linear_acceleration.x or msg.linear_acceleration.y or msg.linear_acceleration.z) <= low_linear_acc) or ((msg.linear_acceleration.x or msg.linear_acceleration.y or msg.linear_acceleration.z) >= high_linear_acc):
         partially_failed_imu = True
-
-    #print("HELLO" + str(partially_failed_imu))
 
 def Odom_callback(msg):
     
@@ -78,6 +77,8 @@ def Odom_callback(msg):
     low_twist = 0.0
     high_twist = 0.0
 
+
+    #Check for odom faults
     if ((msg.pose.pose.position.x or msg.pose.pose.position.y or msg.pose.pose.position.x) <= low_position) or ((msg.pose.pose.position.x or msg.pose.pose.position.y or msg.pose.pose.position.z) >= high_position):
         partially_failed_odom = True
 
@@ -90,8 +91,6 @@ def Odom_callback(msg):
     if (imu_xorientation != msg.pose.pose.orientation.x) or (imu_yorientation != msg.pose.pose.orientation.y) or (imu_zorientation != msg.pose.pose.orientation.z) or (imu_worientation != msg.pose.pose.orientation.w):
         partially_failed_odom = True
 
-    #print("Odom fault: " + str(partially_failed_odom))
-
 def err_tb(tb3_name):
     
     global partially_failed_laser
@@ -103,11 +102,13 @@ def err_tb(tb3_name):
     partially_failed_odom = False
 
     # initialize turtlebot3 node
-    rospy.init_node('remove_turtlebot')
+    rospy.init_node('current_tb')
     r = rospy.Rate(10)
     
     while True:
         print(tb3_name)
+
+        #FOR TESTING: faulty turtlebot (running error injectors) (hard-coded to be turtlebot1)
         if tb3_name == "turtlebot1":
             # subscribe to laserscan, imu, and odom
             LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, LaserScan_callback)
@@ -123,6 +124,7 @@ def err_tb(tb3_name):
             if partially_failed_odom:
                 break
             r.sleep()
+        #Un-faulty turtlebots
         else:
             # subscribe to laserscan, imu, and odom
             LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'scan', LaserScan, LaserScan_callback)
@@ -143,11 +145,12 @@ def err_tb(tb3_name):
             #rospy.signal_shutdown("Fault detected in Odom")
             r.sleep()
 
-
+#Booleans to detect partial faults. True = faulty, False = no fault detected
 partially_failed_laser = False
 partially_failed_imu = False
 partially_failed_odom = False
 
+#Run algorithm on each turtlebot in swarm
 while True:
     tb3_0 = err_tb("turtlebot1")
     tb3_1 = err_tb("turtlebot2")
