@@ -5,7 +5,7 @@
   <arg name="second_tb3" default="tb3_1"/>
   <arg name="third_tb3"  default="tb3_2"/>
   <arg name="fourth_tb3"  default="tb3_3"/>
-
+<!-- world frame pose information -->
   <arg name="first_tb3_x_pos" default="-1.0"/>
   <arg name="first_tb3_y_pos" default=" 4.0"/>
   <arg name="first_tb3_z_pos" default=" 0.0"/>
