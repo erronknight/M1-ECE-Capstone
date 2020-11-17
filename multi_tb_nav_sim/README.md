@@ -4,7 +4,7 @@ you will need 3 separate windows to launch:
 ```
 roslaunch multiple_turtlebots_sim multi_bot.launch
 roslaunch multi_nav_bots_sim mult_map_merge_bots.launch
-rosrun rviz rviz -d `rospack find turtlebot3_gaze`/rviz/multi_turtlebot3_slam.rviz
+rosrun rviz rviz -d `rospack find turtlebot3_gazebo`/rviz/multi_turtlebot3_slam.rviz
 ```
 These set up the 4 robots and their gmapping and map merging nodes. The rviz shows the window with the merged map in it.  
 
