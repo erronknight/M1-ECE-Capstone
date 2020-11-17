@@ -7,11 +7,17 @@ Navigation stack warning
 running ROS + Gazebo from USB / maybe look at AWS RoboMaker
 
 1. Add all gmapping / slam launch files together
+    - gmapping all together but something goes wonky with the combining map
 2. Check multirobot_map_merge for handling unknown number of robots / map contributors
 3. create / save map
+
+
 4. run navigation of namespaced robot on saved map
 
 
 Frontier Exploration ROS Package
 dropdown for selecting robot
 publish a point
+
+
+rosrun map_server map_saver -f ~/map
