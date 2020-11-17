@@ -16,9 +16,12 @@ ROS_NAMESPACE=<tb3 robot id> rosrun turtlebot3_teleop turtlebot3_teleop_key
 
 // Note: the rviz command pulls up a window that only shows fields for 3 of the 4 robots  
 
+When you have a map you want to save, run the following command:  
+```
+rosrun map_server map_saver -f ~/map
+```
 
-
-TODO NOTES
+# TODO NOTES
 
 Navigation stack warning
 [ WARN] [1604777659.565045137, 349.565000000]: Timed out waiting for transform from base_footprint to map to become available before running costmap, tf error: Could not find a connection between 'map' and 'base_footprint' because they are not part of the same tree.Tf has two or more unconnected trees.. canTransform returned after 0.1 timeout was 0.1.
