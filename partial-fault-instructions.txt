@@ -2,9 +2,9 @@ NOTE: turtlebot1 is currently the one that has an error, according to move.py (t
 
 1. IF WANT TO SWITCH WHICH ROBOT IS FAULTY: SET UP ERROR INJECTORS
   Files:	imu_data/src/imu_data.py
-		batterystate_data/src/batterystate_data.py
-		laserscan_data/src/laserscan_data.py
-		odom_data/src/odom_data.py
+			batterystate_data/src/batterystate_data.py
+			laserscan_data/src/laserscan_data.py
+			odom_data/src/odom_data.py
   At the end of each injector file, decide which turtlebot/sensor(s) you want to inject errors to, then comment out all other robots
   NOTE: Currently, only 1 robot being faulty (and running all error injectors) is supported!
       ex. If only wanted to inject errors onto tb3_1, imu error injector should look like:	
@@ -29,6 +29,7 @@ NOTE: turtlebot1 is currently the one that has an error, according to move.py (t
 
 6. RUN PARTIAL FAULT ALGORITHM
 	rosrun move_turtlebot move.py
+    
   The algorithm checks each robot for a fault iteratively, starting with turtlebot1. 
   For each robot, it checks each sensor for a fault and prints the result to the screen as a boolean (if there's a fault, will print True).
   Once a fault is detected once(prints True for a sensor), the algorithm will double check that sensor on that robot (to minimize the effects of communication errors).
