@@ -10,7 +10,6 @@ turtlebot_dict = {
     "turtlebot4" : "tb3_3/"	
 }
 
-inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
 actual_seq = 0
@@ -94,9 +93,9 @@ def laserscan_err_inj(tb3_name):
     rate = rospy.Rate(1)
 
     #Publish message into new topic
-    while not rospy.is_shutdown(): 
+    while not rospy.is_shutdown():
+        my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'scan', LaserScan, listener) 
         my_pub = rospy.Publisher(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, queue_size = 10) 
-        my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'scan', LaserScan, listener)
 
         #########################################
         #INJECT ERRORS HERE
@@ -114,10 +113,10 @@ def laserscan_err_inj(tb3_name):
         laserscan_msg.range_max = actual_rangemax
 
         for i in range(len(actual_ranges)):
-            laserscan_msg.ranges[i] = actual_ranges[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+            laserscan_msg.ranges[i] = actual_ranges[i] #inject error here (i just made everything = 0 because it's easy to see when testing)
 
         for j in range(len(actual_intensities)):
-            laserscan_msg.intensities[i] = actual_intensities[i] * 0 #inject error here (i just made everything = 0 because it's easy to see when testing)
+            laserscan_msg.intensities[i] = actual_intensities[i] #inject error here (i just made everything = 0 because it's easy to see when testing)
         #########################################
             
         my_pub.publish(laserscan_msg)

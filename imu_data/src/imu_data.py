@@ -11,7 +11,6 @@ turtlebot_dict = {
     "turtlebot4" : "tb3_3"
 }
 
-inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
 actual_seq = 0
@@ -118,9 +117,9 @@ def imu_err_inj(tb3_name):
     rate = rospy.Rate(1)
 
     #Publish message into new topic
-    while not rospy.is_shutdown(): 
+    while not rospy.is_shutdown():
+        my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + '/imu', Imu, listener) 
         my_pub = rospy.Publisher(turtlebot_dict[tb3_name] + '/imu_err_inj', Imu, queue_size = 10) 
-        my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + '/imu', Imu, listener)
 
         #########################################
         #INJECT ERRORS HERE
@@ -129,24 +128,24 @@ def imu_err_inj(tb3_name):
         imu_msg.header.stamp.nsecs = actual_nsecs
         imu_msg.header.frame_id = actual_frameid
 
-        imu_msg.orientation.x = actual_xorientation * 0.0
-        imu_msg.orientation.y = actual_yorientation * 0.0
-        imu_msg.orientation.z = actual_zorientation * 0.0
-        imu_msg.orientation.w = actual_worientation * 0.0
+        imu_msg.orientation.x = actual_xorientation + 100
+        imu_msg.orientation.y = actual_yorientation + 100
+        imu_msg.orientation.z = actual_zorientation 
+        imu_msg.orientation.w = actual_worientation 
         for i in range(len(actual_orientationcovariance)):
-            imu_msg.orientation_covariance[i] = actual_orientationcovariance[i] * 0.0
+            imu_msg.orientation_covariance[i] = actual_orientationcovariance[i] 
 
-        imu_msg.angular_velocity.x = actual_xangularvelocity * 0.0
-        imu_msg.angular_velocity.y = actual_yangularvelocity * 0.0
-        imu_msg.angular_velocity.z = actual_xangularvelocity * 0.0
+        imu_msg.angular_velocity.x = actual_xangularvelocity
+        imu_msg.angular_velocity.y = actual_yangularvelocity + 300
+        imu_msg.angular_velocity.z = actual_xangularvelocity 
         for j in range(len(actual_angularvelocitycovariance)):
-            imu_msg.angular_velocity_covariance[j] = actual_angularvelocitycovariance[j] * 0.0
+            imu_msg.angular_velocity_covariance[j] = actual_angularvelocitycovariance[j] 
 
-        imu_msg.linear_acceleration.x = actual_xlinearacceleration * 0.0
-        imu_msg.linear_acceleration.y = actual_ylinearacceleration * 0.0
-        imu_msg.linear_acceleration.z = actual_zlinearacceleration * 0.0
+        imu_msg.linear_acceleration.x = actual_xlinearacceleration 
+        imu_msg.linear_acceleration.y = actual_ylinearacceleration 
+        imu_msg.linear_acceleration.z = actual_zlinearacceleration + 200
         for k in range(len(actual_linearaccelerationcovariance)):
-            imu_msg.linear_acceleration_covariance[k] = actual_linearaccelerationcovariance[k] * 0.0
+            imu_msg.linear_acceleration_covariance[k] = actual_linearaccelerationcovariance[k]
 
         #########################################
             
