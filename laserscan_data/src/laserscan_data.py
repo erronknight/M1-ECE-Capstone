@@ -90,7 +90,7 @@ def laserscan_err_inj(tb3_name):
 
     #########################################
 
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(50)
 
     #Publish message into new topic
     while not rospy.is_shutdown():

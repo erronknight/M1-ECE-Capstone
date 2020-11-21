@@ -121,7 +121,7 @@ def odom_err_inj(tb3_name):
     odom_msg.twist.covariance = [0.0] * 36
 
     #########################################
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(50)
 
     #Publish message into new topic
     while not rospy.is_shutdown(): 
