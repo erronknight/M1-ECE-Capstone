@@ -1,0 +1,8 @@
+The id_msg package adds a custom message to keep track of the turtlebots.
+It also comes with an example publisher and subscriber.
+
+To run the publisher, use the command
+roslaunch id_msg pub_launch.launch
+
+To run the subscriber use the commmand
+rosrun id_msg id_sub.py
