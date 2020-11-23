@@ -1,35 +1,40 @@
-NOTE: turtlebot1 is the one that has an error, according to move.py (the partial fault algo)
+NOTE: turtlebot1 is currently the one that has an error, according to move.py (the partial fault algo)
 
 1. IF WANT TO SWITCH WHICH ROBOT IS FAULTY: SET UP ERROR INJECTORS
-	Files:	imu_data/src/imu_data.py
-		batterystate_data/src/batterystate_data.py
-		laserscan_data/src/laserscan_data.py
-		odom_data/src/odom_data.py
-	At the end of each injector file, decide which turtlebot(s)/sensor(s) you want to inject errors to, then comment out all other robots
-		ex. If only wanted to inject errors onto tb3_1, imu error injector should look like:	
-			if __name__ == '__main__':
-    				tb3_0 = imu_err_inj("turtlebot1")
-    				# tb3_1 = imu_err_inj("turtlebot2")
-    				# tb3_2 = imu_err_inj("turtlebot3")
-    				# tb3_3 = imu_err_inj("turtlebot4")
-2. LAUNCH ROBOTS OR GAZEBO
+  Files:	imu_data/src/imu_data.py
+			batterystate_data/src/batterystate_data.py
+			laserscan_data/src/laserscan_data.py
+			odom_data/src/odom_data.py
+  At the end of each injector file, decide which turtlebot/sensor(s) you want to inject errors to, then comment out all other robots
+  NOTE: Currently, only 1 robot being faulty (and running all error injectors) is supported!
+      ex. If only wanted to inject errors onto tb3_1, imu error injector should look like:	
+		if __name__ == '__main__':
+    			tb3_0 = imu_err_inj("turtlebot1")
+    			# tb3_1 = imu_err_inj("turtlebot2")
+    			# tb3_2 = imu_err_inj("turtlebot3")
+    			# tb3_3 = imu_err_inj("turtlebot4")
+2. LAUNCH PHYSICAL ROBOTS OR GAZEBO
+	roslaunch multiple_turtlebots_sim multi_bot.launch
 
 3. RUN ERROR INJECTORS
 	rosrun imu_data imu_data.py
 	rosrun batterystate_data batterystate_data.py (NOTE: Don't run if running in simulation)
 	rosrun laserscan_data laserscan_data.py
 	rosrun odom_data odom_data.py
-  Now, if run rostopic list, all 4 error injectors should show up for the faulty robot
+  Now, if run rostopic list, all 4 error injectors (or 3 if running in simulation) should show up for the faulty robot
 
 5. IF WANT TO SWITCH WHICH ROBOT IS FAULTY: SET UP PARTIAL FAULT ALGORITHM (move_turtlebot/src/move.py)
-	If you want to switch which robot is faulty, change line 93 to say the name of the turtlebot that is faulty. 
-	Note that the error injector must be running on that same robot (steps 1 and 2).
+  If you want to switch which robot is faulty, change line 114 to say the name of the turtlebot that is faulty. 
+  Note that all the error injectors must be running on that same robot (steps 1-3).
 
 6. RUN PARTIAL FAULT ALGORITHM
 	rosrun move_turtlebot move.py
     
-   The algorithm checks each robot for a fault iteratively, starting with turtlebot1. 
-   For each robot, it checks each sensor for a fault and prints the result to the screen as a boolean (if there's a fault, will print True).
-   Once a fault is detected (prints True for a sensor), the algorithm moves on to the next robot. If no faults are detected (all sensors print False), it'll move on after it checks each sensor.
-   When each robot has been checked, it loops back to the first robot (turtlebot1) and runs until the user tells it to stop (CTRL-C)
+  The algorithm checks each robot for a fault iteratively, starting with turtlebot1. 
+  For each robot, it checks each sensor for a fault and prints the result to the screen as a boolean (if there's a fault, will print True).
+  Once a fault is detected once(prints True for a sensor), the algorithm will double check that sensor on that robot (to minimize the effects of communication errors).
+  It then moves on to the next robot.
+  If no faults are detected (all sensors print False), it'll move on after it checks each sensor 3 time.
+  When each robot has been checked, it loops back to the first robot (turtlebot1) and runs until the user tells it to stop (CTRL-C).
+  Additionally, the algorithm publishes each robot's status in a custom message (called id_msg). This information is used by the rest of the system to determine which robot(s) are faulty.
 
