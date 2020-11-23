@@ -35,5 +35,6 @@ NOTE: turtlebot1 is currently the one that has an error, according to move.py (t
   Once a fault is detected once(prints True for a sensor), the algorithm will double check that sensor on that robot (to minimize the effects of communication errors).
   It then moves on to the next robot.
   If no faults are detected (all sensors print False), it'll move on after it checks each sensor 3 time.
-  When each robot has been checked, it loops back to the first robot (turtlebot1) and runs until the user tells it to stop (CTRL-C)
+  When each robot has been checked, it loops back to the first robot (turtlebot1) and runs until the user tells it to stop (CTRL-C).
+  Additionally, the algorithm publishes each robot's status in a custom message (called id_msg). This information is used by the rest of the system to determine which robot(s) are faulty.
 
