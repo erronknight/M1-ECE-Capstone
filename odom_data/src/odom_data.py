@@ -10,7 +10,6 @@ turtlebot_dict = {
     "turtlebot4" : "tb3_3"
 }
 
-inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
 actual_seq = 0
@@ -122,12 +121,12 @@ def odom_err_inj(tb3_name):
     odom_msg.twist.covariance = [0.0] * 36
 
     #########################################
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(50)
 
     #Publish message into new topic
     while not rospy.is_shutdown(): 
-        my_pub = rospy.Publisher(turtlebot_dict[tb3_name] + '/odom_err_inj', Odometry, queue_size = 10) 
         my_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + '/odom', Odometry, listener)
+        my_pub = rospy.Publisher(turtlebot_dict[tb3_name] + '/odom_err_inj', Odometry, queue_size = 10) 
 
         #########################################
         #INJECT ERRORS HERE
@@ -138,24 +137,24 @@ def odom_err_inj(tb3_name):
 
         odom_msg.child_frame_id = actual_childframeid
 
-        odom_msg.pose.pose.position.x = actual_xposition * 0.0
-        odom_msg.pose.pose.position.y = actual_yposition * 0.0
-        odom_msg.pose.pose.position.z = actual_zposition * 0.0
-        odom_msg.pose.pose.orientation.x = actual_xorientation * 0.0
-        odom_msg.pose.pose.orientation.y = actual_yorientation * 0.0
-        odom_msg.pose.pose.orientation.z = actual_zorientation * 0.0
-        odom_msg.pose.pose.orientation.w = actual_worientation * 0.0
+        odom_msg.pose.pose.position.x = actual_xposition 
+        odom_msg.pose.pose.position.y = actual_yposition 
+        odom_msg.pose.pose.position.z = actual_zposition 
+        odom_msg.pose.pose.orientation.x = actual_xorientation
+        odom_msg.pose.pose.orientation.y = actual_yorientation 
+        odom_msg.pose.pose.orientation.z = actual_zorientation
+        odom_msg.pose.pose.orientation.w = actual_worientation
         for i in range(len(actual_posecovariance)):
-            odom_msg.pose.covariance[i] = actual_posecovariance[i] * 0.0
+            odom_msg.pose.covariance[i] = actual_posecovariance[i] 
 
-        odom_msg.twist.twist.linear.x = actual_xlinear * 0.0
-        odom_msg.twist.twist.linear.y = actual_ylinear * 0.0
-        odom_msg.twist.twist.linear.z = actual_zlinear * 0.0
-        odom_msg.twist.twist.angular.x = actual_xangular * 0.0
-        odom_msg.twist.twist.angular.y = actual_yangular * 0.0
-        odom_msg.twist.twist.angular.z = actual_zangular * 0.0
+        odom_msg.twist.twist.linear.x = actual_xlinear
+        odom_msg.twist.twist.linear.y = actual_ylinear 
+        odom_msg.twist.twist.linear.z = actual_zlinear 
+        odom_msg.twist.twist.angular.x = actual_xangular 
+        odom_msg.twist.twist.angular.y = actual_yangular
+        odom_msg.twist.twist.angular.z = actual_zangular
         for j in range(len(actual_twistcovariance)):
-            odom_msg.twist.covariance[j] = actual_twistcovariance[j] * 0.0
+            odom_msg.twist.covariance[j] = actual_twistcovariance[j]
 
         #########################################
             
