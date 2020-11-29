@@ -149,7 +149,8 @@ def err_tb(tb3_name):
         print("")
         print(tb3_name)
         #FOR TESTING: Faulty robot (the one running error injectors) is turtlebot1. If change which robot is faulty, change line below.
-        if tb3_name == "turtlebot1":
+	#If not running error injectors, change line below to ignore "if". So change it to: if False: 
+        if tb3_name == "turtlebot1": 
             #Subscribe to laserscan, imu, and odom
             LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, LaserScan_callback)
             r.sleep()
