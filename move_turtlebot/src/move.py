@@ -8,6 +8,8 @@ from sensor_msgs.msg import LaserScan
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 import time 
+from id_msg.msg import CustomId
+
 #from sensor_msgs.msg import BatteryState #not needed for simulated robots
 
 #Dictionary of all robots in the swarm
@@ -100,6 +102,23 @@ def Odom_callback(msg):
     
     Odom_sub.unregister()
 
+#Publish message to tell rest of the system the turtlebot's status (faulty or not)
+def publish_custom_msg(tb3_name, isFaulty):
+    msg_pub = rospy.Publisher('/id_msg', CustomId, queue_size=1)
+    rate = rospy.Rate(25) #Should match rate in err_tb (i think)
+
+    turtlebot_name = turtlebot_dict[tb3_name]
+
+    message = CustomId()
+    message.id = turtlebot_name[-2] #Get ID # of turtlebot
+    message.name = tb3_name
+    message.fail_flag = str(isFaulty)
+
+    msg_pub.publish(message)
+    rate.sleep()
+
+    #msg_pub.unregister()
+
 
 def err_tb(tb3_name):
    
@@ -131,7 +150,8 @@ def err_tb(tb3_name):
         print("")
         print(tb3_name)
         #FOR TESTING: Faulty robot (the one running error injectors) is turtlebot1. If change which robot is faulty, change line below.
-        if tb3_name == "turtlebot1":
+	#If not running error injectors, change line below to ignore "if". So change it to: if False: 
+        if tb3_name == "turtlebot1": 
             #Subscribe to laserscan, imu, and odom
             LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, LaserScan_callback)
             #LaserScan_sub.shutdown()
@@ -144,7 +164,7 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_laser and count == (laserCheckAgainCode): #Found fault again after double checking
                 print('LaserScan fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_laser = False
                 break
@@ -153,6 +173,14 @@ def err_tb(tb3_name):
                 count = maxNumTries + 1
                 partially_failed_laser = False
                 break
+            elif (not partially_failed_laser) and count == (laserCheckAgainCode): #No fault after double checking
+                print('No LaserScan fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
+                partially_failed_laser = False
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
+                break
+
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             Imu_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'imu_err_inj', Imu, Imu_callback)
             #rospy.wait_for_message('imu_err_inj', Imu)
@@ -165,7 +193,7 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_imu and count == (imuCheckAgainCode): #Found fault again after double checking
                 print('IMU fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_imu = False
                 break
@@ -174,6 +202,14 @@ def err_tb(tb3_name):
                 count = maxNumTries + 1
                 partially_failed_imu = False
                 break
+            elif (not partially_failed_imu) and count == (imuCheckAgainCode): #No fault after double checking
+                print('No IMU fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
+                partially_failed_imu = False
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
+                break
+    
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             Odom_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'odom_err_inj', Odometry, Odom_callback)
             r.sleep()
@@ -184,16 +220,18 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_odom and count == (odomCheckAgainCode): #Found fault again after double checking
                 print('Odom fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_odom = False
                 break
             elif (not partially_failed_odom) and count == (odomCheckAgainCode): #No fault after double checking
                 print('No odom fault found in ' + tb3_name + '. Communication error likely.')
                 count = maxNumTries + 1
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
                 partially_failed_odom = False
                 break
 
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             #Timeout (move onto next robot) after checking robot maxNumTries times and not finding a fault
             if count > maxNumTries:
@@ -214,7 +252,7 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_laser and count == (laserCheckAgainCode): #Found fault again after double checking
                 print('LaserScan fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_laser = False
                 break
@@ -223,6 +261,14 @@ def err_tb(tb3_name):
                 count = maxNumTries + 1
                 partially_failed_laser = False
                 break
+            elif (not partially_failed_laser) and count == (laserCheckAgainCode): #No fault after double checking
+                print('No LaserScan fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
+                partially_failed_laser = False
+                break
+            
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             Imu_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'imu', Imu, Imu_callback)
             r.sleep()
@@ -234,7 +280,7 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_imu and count == (imuCheckAgainCode): #Found fault again after double checking
                 print('IMU fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_imu = False
                 break
@@ -242,7 +288,10 @@ def err_tb(tb3_name):
                 print('No IMU fault found in ' + tb3_name + '. Communication error likely.')
                 count = maxNumTries + 1
                 partially_failed_imu = False
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
                 break
+
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             Odom_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'odom', Odometry, Odom_callback)
             r.sleep()
@@ -254,7 +303,7 @@ def err_tb(tb3_name):
                 continue
             if partially_failed_odom and count == (odomCheckAgainCode): #Found fault again after double checking
                 print('Odom fault still found! ' + tb3_name + ' has partially failed')
-                #Send msg here!!!
+                publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
                 partially_failed_odom = False
                 break
@@ -262,8 +311,10 @@ def err_tb(tb3_name):
                 print('No odom fault found in ' + tb3_name + '. Communication error likely.')
                 count = maxNumTries + 1
                 partially_failed_odom = False
+                publish_custom_msg(tb3_name, False) #Update status to not faulty
                 break
 
+            publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             #Timeout (move onto next robot) after checking robot maxNumTries times and not finding a fault
             if count >= maxNumTries:
