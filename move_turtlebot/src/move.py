@@ -9,6 +9,7 @@ from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 import time 
 from id_msg.msg import CustomId
+
 #from sensor_msgs.msg import BatteryState #not needed for simulated robots
 
 #Dictionary of all robots in the swarm
@@ -153,6 +154,7 @@ def err_tb(tb3_name):
         if tb3_name == "turtlebot1": 
             #Subscribe to laserscan, imu, and odom
             LaserScan_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'laser_err_inj', LaserScan, LaserScan_callback)
+            #LaserScan_sub.shutdown()
             r.sleep()
             print("LaserScan fault: " + str(partially_failed_laser))
             if partially_failed_laser and count != (laserCheckAgainCode): #Found fault 1st time
@@ -170,12 +172,18 @@ def err_tb(tb3_name):
                 print('No LaserScan fault found in ' + tb3_name + '. Communication error likely.')
                 count = maxNumTries + 1
                 partially_failed_laser = False
+                break
+            elif (not partially_failed_laser) and count == (laserCheckAgainCode): #No fault after double checking
+                print('No LaserScan fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
+                partially_failed_laser = False
                 publish_custom_msg(tb3_name, False) #Update status to not faulty
                 break
 
             publish_custom_msg(tb3_name, False) #Update status to not faulty
 
             Imu_sub = rospy.Subscriber(turtlebot_dict[tb3_name] + 'imu_err_inj', Imu, Imu_callback)
+            #rospy.wait_for_message('imu_err_inj', Imu)
             r.sleep()
             print("IMU fault: " + str(partially_failed_imu))
             if partially_failed_imu and count != (imuCheckAgainCode): #Found fault 1st time
@@ -187,6 +195,11 @@ def err_tb(tb3_name):
                 print('IMU fault still found! ' + tb3_name + ' has partially failed')
                 publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
+                partially_failed_imu = False
+                break
+            elif (not partially_failed_imu) and count == (imuCheckAgainCode): #No fault after double checking
+                print('No IMU fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
                 partially_failed_imu = False
                 break
             elif (not partially_failed_imu) and count == (imuCheckAgainCode): #No fault after double checking
@@ -241,6 +254,11 @@ def err_tb(tb3_name):
                 print('LaserScan fault still found! ' + tb3_name + ' has partially failed')
                 publish_custom_msg(tb3_name, True) #Update status to faulty
                 count = maxNumTries + 1 #To exit loop
+                partially_failed_laser = False
+                break
+            elif (not partially_failed_laser) and count == (laserCheckAgainCode): #No fault after double checking
+                print('No LaserScan fault found in ' + tb3_name + '. Communication error likely.')
+                count = maxNumTries + 1
                 partially_failed_laser = False
                 break
             elif (not partially_failed_laser) and count == (laserCheckAgainCode): #No fault after double checking
