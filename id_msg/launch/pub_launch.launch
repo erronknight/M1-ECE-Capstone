@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="id_msg" type="id_pub.py" name="id_msg" output="screen"></node>
+</launch>
