@@ -1,0 +1,28 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+
+    <!-- Run the map server
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find my_mapping_launcher)/config/my_map.yaml">
+    <param name="frame_id" value="/map" />
+  </node> -->
+
+    <!-- AMCL -->
+
+    <!-- ROBOT 1-->
+    <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="robot1" />
+    </include>
+
+    <!-- ROBOT 2-->
+    <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="robot2" />
+    </include>
+
+    <!-- ROBOT 3-->
+    <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="robot3" />
+    </include>
+
+    <node type="rviz" name="rviz" pkg="rviz" />
+
+</launch>
