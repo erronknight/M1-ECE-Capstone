@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
-# THIS IS NOT FINISHED
-
+#NOTE: NOT CURRENTLY USED IN PARTIAL FAULT ALGO
 import rospy
 from sensor_msgs.msg import BatteryState
 
@@ -11,8 +10,6 @@ turtlebot_dict = {
 	"turtlebot3" : "tb3_2/",
         "turtlebot4" : "tb3_3/"
 }
-
-inf = 0.0 #Should probably change this, the inf was just being annoying
 
 #Variables for the values coming from the (real) scan topic
 actual_seq = 0
@@ -107,7 +104,7 @@ def bs_err_inj(tb3_name):
 
     #########################################
 
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(50)
 
     #Publish message into new topic
     while not rospy.is_shutdown(): 

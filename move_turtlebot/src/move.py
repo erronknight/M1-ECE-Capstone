@@ -10,8 +10,6 @@ from nav_msgs.msg import Odometry
 import time 
 from id_msg.msg import CustomId
 
-#from sensor_msgs.msg import BatteryState #not needed for simulated robots
-
 #Dictionary of all robots in the swarm
 turtlebot_dict = {
     "turtlebot1" : "tb3_0/",
