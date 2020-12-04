@@ -4,29 +4,29 @@
     <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
 
     <!-- BEGIN ROBOT 1-->
-    <group ns="robot1">
-        <param name="tf_prefix" value="robot1_tf" />
+    <group ns="tb3_0">
+        <param name="tf_prefix" value="tb3_0" />
         <include file="$(find multi_robot_system)/launch/single_robot.launch">
-            <arg name="init_pose" value="-x 3 -y 1 -z 0" />
-            <arg name="robot_name" value="Robot1" />
+            <arg name="init_pose" value="-x 0.5 -y 0.5 -z 0 -Y 0" />
+            <arg name="robot_name" value="tb3_0" />
         </include>
     </group>
 
     <!-- BEGIN ROBOT 2-->
-    <group ns="robot2">
-        <param name="tf_prefix" value="robot2_tf" />
+    <group ns="tb3_1">
+        <param name="tf_prefix" value="tb3_1" />
         <include file="$(find multi_robot_system)/launch/single_robot.launch">
-            <arg name="init_pose" value="-x -4 -y 1 -z 0" />
-            <arg name="robot_name" value="Robot2" />
+            <arg name="init_pose" value="-x -2 -y 0.5 -z 0 -Y 0" />
+            <arg name="robot_name" value="tb3_1" />
         </include>
     </group>
 
     <!-- BEGIN ROBOT 3-->
-    <group ns="robot3">
-        <param name="tf_prefix" value="robot3_tf" />
+    <group ns="tb3_2">
+        <param name="tf_prefix" value="tb3_2" />
         <include file="$(find multi_robot_system)/launch/single_robot.launch">
-            <arg name="init_pose" value="-x 1 -y -6 -z 0" />
-            <arg name="robot_name" value="Robot3" />
+            <arg name="init_pose" value="-x 1 -y -2 -z 0 -Y 0" />
+            <arg name="robot_name" value="tb3_2" />
         </include>
     </group>
 

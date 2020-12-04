@@ -2,25 +2,32 @@
     <param name="/use_sim_time" value="true"/>
 
     <!-- Run the map server
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find my_mapping_launcher)/config/my_map.yaml">
-    <param name="frame_id" value="/map" />
-  </node> -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(env HOME)/map.yaml">
+        <param name="frame_id" value="/map" />
+    </node> -->
 
     <!-- AMCL -->
 
     <!-- ROBOT 1-->
     <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
-        <arg name="robot_name" value="robot1" />
+        <arg name="robot_name" value="tb3_0" />
     </include>
 
     <!-- ROBOT 2-->
     <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
-        <arg name="robot_name" value="robot2" />
+        <arg name="robot_name" value="tb3_1" />
     </include>
 
     <!-- ROBOT 3-->
     <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
-        <arg name="robot_name" value="robot3" />
+        <arg name="robot_name" value="tb3_2" />
+    </include>
+
+    <!-- MOVE_BASE -->
+
+    <!-- ROBOT 1 -->
+    <include file="$(find multi_robot_system)/launch/move_base_single_robot.launch">
+        <arg name="robot_name" value="tb3_0" />
     </include>
 
     <node type="rviz" name="rviz" pkg="rviz" />
