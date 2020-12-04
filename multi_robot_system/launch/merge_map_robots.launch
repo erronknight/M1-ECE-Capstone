@@ -39,6 +39,7 @@
         <param name="estimation_confidence" value="1.0"/>
     </node>
 
+
     <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_0/map 100"/>
     <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_1/map 100"/>
     <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_2/map 100"/>

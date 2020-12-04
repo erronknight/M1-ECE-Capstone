@@ -1,10 +1,11 @@
 <launch>
     <param name="/use_sim_time" value="true"/>
 
-    <!-- Run the map server
-    <node name="map_server" pkg="map_server" type="map_server" args="$(env HOME)/map.yaml">
-        <param name="frame_id" value="/map" />
-    </node> -->
+    <!-- Run the map server -->
+    <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+        <param name="frame_id" value="/odom" />
+    </node>
 
     <!-- AMCL -->
 
@@ -22,6 +23,10 @@
     <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
         <arg name="robot_name" value="tb3_2" />
     </include>
+
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /tb3_0/base_link /tb3_0/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /tb3_1/base_link /tb3_1/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /tb3_2/base_link /tb3_2/base_footprint 100"/>
 
     <!-- MOVE_BASE -->
 
