@@ -3,8 +3,8 @@
     <!-- ROBOT 1 -->
     <include file="$(find multi_robot_system)/launch/map_single_robot.launch">
         <arg name="robot_name" value="tb3_0" />
-        <arg name="robot_x_pos" value=" 0.5"/>
-        <arg name="robot_y_pos" value=" 0.5"/>
+        <arg name="robot_x_pos" value=" -1.0"/>
+        <arg name="robot_y_pos" value=" 4.0"/>
         <arg name="robot_z_pos" value=" 0.0"/>
         <arg name="robot_yaw" value=" 0.0"/>
     </include>
@@ -12,8 +12,8 @@
     <!-- ROBOT 2 -->
     <include file="$(find multi_robot_system)/launch/map_single_robot.launch">
         <arg name="robot_name" value="tb3_1" />
-        <arg name="robot_x_pos" value=" -2.0"/>
-        <arg name="robot_y_pos" value=" 0.5"/>
+        <arg name="robot_x_pos" value=" -1.0"/>
+        <arg name="robot_y_pos" value=" 1.0"/>
         <arg name="robot_z_pos" value=" 0.0"/>
         <arg name="robot_yaw" value=" 0.0"/>
     </include>
@@ -21,8 +21,17 @@
     <!-- ROBOT 3 -->
     <include file="$(find multi_robot_system)/launch/map_single_robot.launch">
         <arg name="robot_name" value="tb3_2" />
-        <arg name="robot_x_pos" value=" 1.0"/>
-        <arg name="robot_y_pos" value=" -2.0"/>
+        <arg name="robot_x_pos" value=" -4.0"/>
+        <arg name="robot_y_pos" value=" 4.0"/>
+        <arg name="robot_z_pos" value=" 0.0"/>
+        <arg name="robot_yaw" value=" 0.0"/>
+    </include>
+
+    <!-- ROBOT 3 -->
+    <include file="$(find multi_robot_system)/launch/map_single_robot.launch">
+        <arg name="robot_name" value="tb3_3" />
+        <arg name="robot_x_pos" value=" -4.0"/>
+        <arg name="robot_y_pos" value=" 1.0"/>
         <arg name="robot_z_pos" value=" 0.0"/>
         <arg name="robot_yaw" value=" 0.0"/>
     </include>
@@ -40,8 +49,9 @@
     </node>
 
 
-    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_0/map 100"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_0/map 100"/>
     <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_1/map 100"/>
     <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_2/map 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_3_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_3/map 100"/> -->
 
 </launch>

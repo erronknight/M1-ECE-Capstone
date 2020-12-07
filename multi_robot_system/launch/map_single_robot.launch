@@ -27,6 +27,8 @@
         </node>
     </group>
 
-    <!-- <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(robot_name)/map 100"/> -->
+    <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg robot_name)/map 100"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="local_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /$(arg robot_name)/map /$(arg robot_name)/odom 100"/>
 
 </launch>

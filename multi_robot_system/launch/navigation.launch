@@ -24,9 +24,15 @@
         <arg name="robot_name" value="tb3_2" />
     </include>
 
-    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /tb3_0/base_link /tb3_0/base_footprint 100"/>
+    <!-- ROBOT 4-->
+    <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="tb3_3" />
+    </include>
+
+    <!-- <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /tb3_0/base_link /tb3_0/base_footprint 100"/>
     <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /tb3_1/base_link /tb3_1/base_footprint 100"/>
     <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /tb3_2/base_link /tb3_2/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_3_tf_broadcaster" args="0 0 0 0 0 0 /tb3_2/base_link /tb3_3/base_footprint 100"/> -->
 
     <!-- MOVE_BASE -->
 
