@@ -14,22 +14,26 @@
     <arg name="base_frame_id" default="$(arg robot_name)_tf/base_footprint"/> -->
     <arg name="odom_frame_id" default="$(arg robot_name)/odom"/>
     <arg name="base_frame_id" default="$(arg robot_name)/base_footprint"/>
-    <arg name="global_frame_id" default="$(arg robot_name)/map"/>
+    <!-- <arg name="global_frame_id" default="$(arg robot_name)/map"/> -->
+    <arg name="global_frame_id" default="/map"/>
+
 
     <!-- move_base -->
     <node pkg="move_base" type="move_base" respawn="false" name="$(arg robot_name)_move_base" output="screen">
+        <param name="use_sim_time" value="true" />
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
         <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
-        <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
-        <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find multi_robot_system)/param/local/local_costmap_params_$(arg robot_name).yaml" command="load" />
+        <rosparam file="$(find multi_robot_system)/param/global/global_costmap_params_$(arg robot_name).yaml" command="load" />
         <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
         <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
         <rosparam file="$(find turtlebot3_navigation)/param/base_local_planner_params.yaml" command="load" />
 
+        <remap from="base_scan" to="$(arg robot_name)/base_scan" />
         <param name="/move_base/global_costmap/static_map" value="false" />
         <param name="/move_base/global_costmap/robot_base_frame" value="$(arg robot_name)/base_footprint"/>
-        <param name="/move_base/global_costmap/global_frame" value="$(arg robot_name)/map"/>
+        <!-- <param name="/move_base/global_costmap/global_frame" value="$(arg robot_name)/map"/> -->
         <param name="/move_base/local_costmap/global_frame" value="$(arg robot_name)/odom"/>
         <param name="/move_base/local_costmap/robot_base_frame" value="$(arg robot_name)/base_footprint"/>
 

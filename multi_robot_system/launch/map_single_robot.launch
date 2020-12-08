@@ -18,7 +18,8 @@
         <arg name="configuration_basename" default="turtlebot3_lds_2d.lua"/>
         <arg name="set_base_frame" default="$(arg robot_name)/base_footprint"/>
         <arg name="set_odom_frame" default="$(arg robot_name)/odom"/>
-        <arg name="set_map_frame" default="$(arg robot_name)/map"/>
+        <!-- <arg name="set_map_frame" default="$(arg robot_name)/map"/> -->
+        <arg name="set_map_frame" default="/map"/>
         <node pkg="gmapping" type="slam_gmapping" name="turtlebot3_slam_gmapping" output="screen">
             <param name="base_frame" value="$(arg set_base_frame)"/>
             <param name="odom_frame" value="$(arg set_odom_frame)"/>
@@ -27,8 +28,8 @@
         </node>
     </group>
 
-    <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg robot_name)/map 100"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="world_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /map /$(arg robot_name)/map 100"/> -->
 
-    <node pkg="tf" type="static_transform_publisher" name="local_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /$(arg robot_name)/map /$(arg robot_name)/odom 100"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="local_to_$(arg robot_name)_tf_broadcaster" args="0 0 0 0 0 0 /$(arg robot_name)/map /$(arg robot_name)/odom 100"/> -->
 
 </launch>
