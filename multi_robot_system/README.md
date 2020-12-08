@@ -1,6 +1,8 @@
 NEW ERROR
 [ WARN] [1607407853.141989466, 1486.243000000]: The origin for the sensor at (-1.01, 4.01) is out of map bounds. So, the costmap cannot raytrace for it.
 
+http://wiki.ros.org/topic_tools/transform
+migth hold the secrets
 
 possibly could be solved with an intermediate tf transform
 

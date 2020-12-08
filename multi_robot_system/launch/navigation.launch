@@ -1,11 +1,11 @@
 <launch>
     <param name="/use_sim_time" value="true"/>
 
-    <!-- Run the map server -->
+    <!-- Run the map server
     <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
         <param name="frame_id" value="/odom" />
-    </node>
+    </node> -->
 
     <!-- AMCL -->
 
@@ -42,7 +42,7 @@
     </include>
     
     <!-- <node pkg="tf" type="static_transform_publisher" name="map_to_ind_tf_broadcaster" args="10 10 0 0 0 0 /map /ind 100"/> -->
-    <node pkg="tf" type="static_transform_publisher" name="ind_to_odom_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_0/odom 10"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="ind_to_odom_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_0/odom 10"/> -->
 
     <node type="rviz" name="rviz" pkg="rviz" />
 
