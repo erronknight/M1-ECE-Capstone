@@ -22,8 +22,8 @@
     <node pkg="move_base" type="move_base" respawn="false" name="$(arg robot_name)_move_base" output="screen">
         <param name="use_sim_time" value="true" />
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
-        <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
-        <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find multi_robot_system)/param/common/costmap_common_params_burger_$(arg robot_name).yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find multi_robot_system)/param/common/costmap_common_params_burger_$(arg robot_name).yaml" command="load" ns="local_costmap" />
         <rosparam file="$(find multi_robot_system)/param/local/local_costmap_params_$(arg robot_name).yaml" command="load" />
         <rosparam file="$(find multi_robot_system)/param/global/global_costmap_params_$(arg robot_name).yaml" command="load" />
         <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
