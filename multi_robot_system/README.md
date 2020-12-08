@@ -6,6 +6,10 @@ migth hold the secrets
 
 possibly could be solved with an intermediate tf transform
 
+
+current state
+![alt text](https://github.com/erronknight/M1-ECE-Capstone/blob/navigation_multi/multi_robot_system/current_state.png "current state in rviz")
+
 [ WARN] [1607327055.200716635, 148.438000000]: Timed out waiting for transform from base_footprint to map to become available before running costmap, tf error: canTransform: source_frame base_footprint does not exist.. canTransform returned after 0.104 timeout was 0.1.
 
 
