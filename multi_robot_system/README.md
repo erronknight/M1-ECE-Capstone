@@ -2,7 +2,7 @@ NEW ERROR
 [ WARN] [1607407853.141989466, 1486.243000000]: The origin for the sensor at (-1.01, 4.01) is out of map bounds. So, the costmap cannot raytrace for it.
 
 
-
+possibly could be solved with an intermediate tf transform
 
 [ WARN] [1607327055.200716635, 148.438000000]: Timed out waiting for transform from base_footprint to map to become available before running costmap, tf error: canTransform: source_frame base_footprint does not exist.. canTransform returned after 0.104 timeout was 0.1.
 
