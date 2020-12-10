@@ -52,10 +52,10 @@
 
     <node pkg="tf" type="static_transform_publisher" name="map_merged_tf" args="-10 -10 0 0 0 0 world map 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_0/map 10"/>
-    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_1/map 10"/>
-    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_2/map 10"/>
-    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_3_tf_broadcaster" args="0 0 0 0 0 0 /map /tb3_3/map 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_0_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_0/map 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_1_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_1/map 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_2_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_2/map 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="world_to_tb3_3_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_3/map 10"/>
 
     <node pkg="tf" type="static_transform_publisher" name="map_to_odom_0_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_0/odom 5"/>
     <node pkg="tf" type="static_transform_publisher" name="map_to_odom_1_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_1/odom 5"/>
