@@ -1,0 +1,61 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+
+    <!-- Run the map server
+    <arg name="map_file" default="$(find turtlebot3_navigation)/maps/map.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+        <param name="frame_id" value="/odom" />
+    </node> -->
+
+    <!-- AMCL -->
+
+    <!-- ROBOT 1-->
+    <!-- <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="tb3_0" />
+    </include> -->
+
+    <!-- ROBOT 2-->
+    <!-- <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="tb3_1" />
+    </include> -->
+
+    <!-- ROBOT 3-->
+    <!-- <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="tb3_2" />
+    </include> -->
+
+    <!-- ROBOT 4-->
+    <!-- <include file="$(find multi_robot_system)/launch/amcl_single_robot.launch">
+        <arg name="robot_name" value="tb3_3" />
+    </include> -->
+
+    <!-- <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_0_tf_broadcaster" args="0 0 0 0 0 0 /tb3_0/base_link /tb3_0/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_1_tf_broadcaster" args="0 0 0 0 0 0 /tb3_1/base_link /tb3_1/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_2_tf_broadcaster" args="0 0 0 0 0 0 /tb3_2/base_link /tb3_2/base_footprint 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="bl_to_bs_tb3_3_tf_broadcaster" args="0 0 0 0 0 0 /tb3_2/base_link /tb3_3/base_footprint 100"/> -->
+
+    <!-- MOVE_BASE -->
+
+    <!-- ROBOT 1 -->
+    <include file="$(find multi_robot_system)/launch/move_base_single_robot.launch">
+        <arg name="robot_name" value="tb3_0" />
+    </include>
+        <!-- ROBOT 2 -->
+    <include file="$(find multi_robot_system)/launch/move_base_single_robot.launch">
+        <arg name="robot_name" value="tb3_1" />
+    </include>
+        <!-- ROBOT 3 -->
+    <include file="$(find multi_robot_system)/launch/move_base_single_robot.launch">
+        <arg name="robot_name" value="tb3_2" />
+    </include>
+        <!-- ROBOT 4 -->
+    <include file="$(find multi_robot_system)/launch/move_base_single_robot.launch">
+        <arg name="robot_name" value="tb3_3" />
+    </include>
+    
+    <!-- <node pkg="tf" type="static_transform_publisher" name="map_to_ind_tf_broadcaster" args="10 10 0 0 0 0 /map /ind 100"/> -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="ind_to_odom_tf_broadcaster" args="10 10 0 0 0 0 /map /tb3_0/odom 10"/> -->
+
+    <node type="rviz" name="rviz" pkg="rviz" />
+
+</launch>
